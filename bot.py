@@ -11,8 +11,8 @@ from translate import ua_to_en
 from googletrans import Translator
 
 
-OWM_TOKEN = '358e9d9d5b4efd385d7db419b90813f2' 
-TOKEN = '1648043856:AAGv_3i0lbhIjReon3ZUvlg8pbF52NXRmaQ'
+OWM_TOKEN = '' 
+TOKEN = ''
 bot = telebot.TeleBot(TOKEN)
 owm = OWM(OWM_TOKEN)
 
