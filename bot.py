@@ -103,7 +103,7 @@ def get_input(message):
 
 def send_eng_trans(message):
     """Send message of translated ukrainian to english text."""
-    bot.send_message(message.chat.id, ua_to_en(message.text))
+    bot.reply_to(message, ua_to_en(message.text))
 
 
 bot.polling(none_stop=True)
