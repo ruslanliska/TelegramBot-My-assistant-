@@ -1,11 +1,12 @@
 from pyowm import OWM
-
+import logging
 from config import OWM_TOKEN
 
 owm = OWM(OWM_TOKEN)
 
 
 def get_forecast(place):
+    logging.debug("Get forecast function")
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place(place)
     w = observation.weather

@@ -1,3 +1,5 @@
+import logging
+
 import pyowm
 import telebot
 from pyowm import OWM
@@ -8,6 +10,7 @@ from config import OWM_TOKEN, TOKEN
 from news import BotArticles
 from translate import ua_to_en, ua_to_de
 from weather import get_forecast
+from utils import Logger
 
 bot = telebot.TeleBot(TOKEN)
 owm = OWM(OWM_TOKEN)
@@ -65,6 +68,7 @@ def send_forecast(message):
         forecast = get_forecast(message.text)
         bot.send_message(message.chat.id, forecast)
     except pyowm.commons.exceptions.NotFoundError as e:
+        logging.error("No city found for user and error handled. User asked to enter city again")
         bot.send_message(message.chat.id,
                          """❌  Нажаль я не можу знайти таке місто! \nБудь ласка, перевірь ще раз та спробуй знову!""")
         default_menu(message)
@@ -120,4 +124,5 @@ def main():
 
 
 if __name__ == "__main__":
+    Logger()
     main()
