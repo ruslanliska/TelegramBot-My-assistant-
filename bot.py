@@ -72,8 +72,9 @@ def send_forecast(message):
 @bot.callback_query_handler(func=lambda call: call.data == 'news')
 def command_news(call):
     """Take call and ask for title in News and sends message to user."""
-    bot.send_message(call.message.chat.id, "🆕 Ось яку останню статтю я отримав:\n")
-    bot.send_message(call.message.chat.id, get_article(), parse_mode='HTML')
+    bot.send_message(call.message.chat.id, "🆕 Ось найважливіші новини на даний момент:\n")
+    for i in get_article():
+        bot.send_message(call.message.chat.id, i, parse_mode='HTML')
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "translate")
