@@ -1,5 +1,5 @@
-import pyowm
 from pyowm import OWM
+
 from config import OWM_TOKEN
 
 owm = OWM(OWM_TOKEN)
@@ -35,5 +35,3 @@ def get_forecast(place):
                \nВологість: {hu}%"""
 
     return forecast
-
-
