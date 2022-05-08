@@ -1,6 +1,7 @@
 import pyowm
 import telebot
 from pyowm import OWM
+from pyowm.commons.exceptions import NotFoundError
 from telebot import types
 
 from config import OWM_TOKEN, TOKEN
@@ -61,12 +62,15 @@ def command_weather(call):
 def send_forecast(message):
     """Take city name and returns forecast."""
     try:
-        get_forecast(message.text)
-    except pyowm.commons.exceptions.NotFoundError:
+        forecast = get_forecast(message.text)
+        bot.send_message(message.chat.id, forecast)
+    except pyowm.commons.exceptions.NotFoundError as e:
+        print(e)
         bot.send_message(message.chat.id,
                          """❌  Нажаль я не можу знайти таке місто! \nБудь ласка, перевірь ще раз та спробуй знову!""")
-    forecast = get_forecast(message.text)
-    bot.send_message(message.chat.id, forecast)
+        default_menu(message)
+    # forecast = get_forecast(message.text)
+    # bot.send_message(message.chat.id, forecast)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'news')
@@ -114,4 +118,9 @@ def send_de_trans(message):
     bot.reply_to(message, ua_to_de(message.text))
 
 
-bot.polling(none_stop=True)
+def main():
+    bot.polling(none_stop=True)
+
+
+if __name__ == "__main__":
+    main()
