@@ -13,7 +13,10 @@ def ua_to_en(words):
     translation = trans.translate(words, src='uk', dest='en')
     return translation.text
 
+def ua_to_de(words):
+    translation = trans.translate(words, src='uk', dest='de')
+    return translation.text
 
-languages = ['English']
+languages = ['English', 'German']
 
 # print(ua_to_en("що робиш"))

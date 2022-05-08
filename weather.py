@@ -9,7 +9,7 @@ def get_forecast(place):
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place(place)
     w = observation.weather
-    #temperature
+    # temperature
     t = w.temperature('celsius')
     t1 = t['temp']
     t2 = t['feels_like']
@@ -17,18 +17,18 @@ def get_forecast(place):
     t4 = t['temp_min']
     hu = w.humidity
     wi = w.wind()['speed']
-    #clouds
+    # clouds
     cl = w.clouds
-    #status
+    # status
     st = w.status
-    #details
+    # details
     det = w.detailed_status
-    #time
+    # time
     ti = w.reference_time('iso')
-    #pressure
+    # pressure
     pr = w.pressure['press']
 
-    forecast = f"""У місті {place} температура {t1}°C, щоправда відчуваєтся як {t2}°C. 
+    forecast = f"""У населеному пункті {place} температура {t1}°C, щоправда відчуваєтся як {t2}°C. 
                \nПротягом доби, максимальна температура {t3}°C, мінімальна {t4}°C,
                \nШвидкість вітру протягом дня: {wi} м/с.
                \nАтмосферний тиск: {pr} Па
@@ -36,4 +36,4 @@ def get_forecast(place):
 
     return forecast
 
-# print(get_forecast("Lvfv")) 
+# print(get_forecast("Lvfv"))

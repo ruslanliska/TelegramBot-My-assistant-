@@ -7,12 +7,10 @@ from pyowm import OWM
 from weather import get_forecast
 from news import get_article
 import translate
-from translate import ua_to_en
+from translate import ua_to_en, ua_to_de
 from googletrans import Translator
+from config import OWM_TOKEN, TOKEN
 
-
-OWM_TOKEN = '' 
-TOKEN = ''
 bot = telebot.TeleBot(TOKEN)
 owm = OWM(OWM_TOKEN)
 
@@ -63,7 +61,8 @@ def send_forecast(message):
     try:
         get_forecast(message.text)
     except pyowm.commons.exceptions.NotFoundError:
-        bot.send_message(message.chat.id, """❌  Нажаль я не можу знайти таке місто! \nБудь ласка, перевірь ще раз та спробуй знову!""")
+        bot.send_message(message.chat.id,
+                         """❌  Нажаль я не можу знайти таке місто! \nБудь ласка, перевірь ще раз та спробуй знову!""")
     forecast = get_forecast(message.text)
     bot.send_message(message.chat.id, forecast)
 
@@ -80,23 +79,25 @@ def command_translate(call):
     """Take call translate and ask user for language which preffered to translate"""
     trans_markup = types.ReplyKeyboardMarkup(resize_keyboard=True,
                                              one_time_keyboard=False)
-    trans_markup.row('English')
+    trans_markup.row('English', 'German')
     sent = bot.send_message(call.message.chat.id, "📃 Будь ласка, уточни мову на яку ти бажаєш перекласти",
                             reply_markup=trans_markup)
     bot.register_next_step_handler(sent, get_input)
 
 
-languages = ['English']
+languages = ['English', 'German']
 
 
 def get_input(message):
     """Check whether language is avaliable and ask for text to be translated."""
     if not any(message.text in item for item in languages):
         hide_markup = types.ReplyKeyboardRemove()
-        bot.send_message(message.chat.id, "❌ Нажаль я незнаю такої мови. Будь ласка, обери з меню нижче", reply_markup=hide_markup) 
+        bot.send_message(message.chat.id, "❌ Нажаль я незнаю такої мови. Будь ласка, обери з меню нижче",
+                         reply_markup=hide_markup)
     else:
-        sent = bot.send_message(message.chat.id, f"🚩 Ти обрав таку мову: {message.text} \n➡️ Введи текст, який бажаєш перекласти")
-        languages_switcher = {'English': send_eng_trans}
+        sent = bot.send_message(message.chat.id,
+                                f"🚩 Ти обрав таку мову: {message.text} \n➡️ Введи текст, який бажаєш перекласти")
+        languages_switcher = {'English': send_eng_trans, 'German': send_de_trans}
         lang_response = languages_switcher.get(message.text)
         bot.register_next_step_handler(sent, lang_response)
 
@@ -104,6 +105,10 @@ def get_input(message):
 def send_eng_trans(message):
     """Send message of translated ukrainian to english text."""
     bot.reply_to(message, ua_to_en(message.text))
+
+
+def send_de_trans(message):
+    bot.reply_to(message, ua_to_de(message.text))
 
 
 bot.polling(none_stop=True)
