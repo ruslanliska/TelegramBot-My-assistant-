@@ -56,10 +56,14 @@ def ask_for_help(message):
     """Reply to all unknown text with menu buttoms."""
     if message.text.lower() == "добре":
         bot.send_message(message.chat.id, "Я радий, що в тебе все добре")
+    if message.text.lower() == "дякую":
+        bot.send_message(message.chat.id, "Я радий, що зміг тобі допомогти")
     default_menu(message)
 
+@bot.message_handler(content_types=['audio', 'document'])
+def unknown(message):
+    default_menu(message)
 
-# @bot.message_handler(content_types=['document', 'audio'])
 def file_handler(message):
     try:
         file_name = message.document.file_name
@@ -74,7 +78,6 @@ def file_handler(message):
         audio_file = pdf_converter(file_path=full_path)
         audio_path = f'{full_path}.mp3'
         audio_file.save(audio_path)
-        time.sleep(5)
         result = open(audio_path, 'rb')
         bot.send_audio(message.chat.id, result)
         result.close()
