@@ -1,6 +1,9 @@
 import logging
 import os
 import tempfile
+import shutil
+
+import time
 import pyowm
 import telebot
 from pyowm import OWM
@@ -56,11 +59,15 @@ def ask_for_help(message):
 @bot.message_handler(content_types=['document', 'audio'])
 def file_handler(message):
     file_name = message.document.file_name
-    file_name = f'tmp{os.getpid()}/{file_name}'
+    file_path = f'tmp{os.getpid()}'
+    os.mkdir(file_path)
     file_info = bot.get_file(message.document.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
-    with open(file_name, 'wb') as new_file:
+    with open(f'{file_path}/{file_name}', 'wb') as new_file:
         new_file.write(downloaded_file)
+    time.sleep(5)
+    shutil.rmtree(file_path)
+
 
 @bot.callback_query_handler(func=lambda call: call.data == 'weather')
 def command_weather(call):
