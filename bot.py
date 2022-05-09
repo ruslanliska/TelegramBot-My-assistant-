@@ -36,9 +36,11 @@ def default_menu(message):
                                               callback_data='weather')
     item_news = types.InlineKeyboardButton(text='Новини',
                                            callback_data='news')
-    item_quiz = types.InlineKeyboardButton(text="Перекладач",
-                                           callback_data="translate")
-    markup_inline.add(item_news, item_weather, item_quiz)
+    item_translate = types.InlineKeyboardButton(text="Перекладач",
+                                                callback_data="translate")
+    item_converter = types.InlineKeyboardButton(text='Конвертувати PDF -> MP3',
+                                                callback_data='converter')
+    markup_inline.add(item_news, item_weather, item_translate, item_converter)
     bot.send_message(message.chat.id, "Будь ласка, вибери необхідний пункт",
                      reply_markup=markup_inline)
 
@@ -57,25 +59,36 @@ def ask_for_help(message):
     default_menu(message)
 
 
-@bot.message_handler(content_types=['document', 'audio'])
+# @bot.message_handler(content_types=['document', 'audio'])
 def file_handler(message):
-    file_name = message.document.file_name
-    file_path = f'tmp{os.getpid()}'
-    os.mkdir(file_path)
-    full_path = f'{file_path}/{file_name}'
-    file_info = bot.get_file(message.document.file_id)
-    downloaded_file = bot.download_file(file_info.file_path)
-    with open(full_path, 'wb') as new_file:
-        new_file.write(downloaded_file)
-    bot.send_message(message.chat.id, "Мені потрібно трішки часу, зачекай будь ласка!")
-    audio_file = pdf_converter(file_path=full_path)
-    audio_path = f'{full_path}.mp3'
-    audio_file.save(audio_path)
-    time.sleep(5)
-    result = open(audio_path, 'rb')
-    bot.send_audio(message.chat.id, result)
-    result.close()
-    shutil.rmtree(file_path)
+    try:
+        file_name = message.document.file_name
+        file_path = f'tmp{os.getpid()}'
+        os.mkdir(file_path)
+        full_path = f'{file_path}/{file_name}'
+        file_info = bot.get_file(message.document.file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
+        with open(full_path, 'wb') as new_file:
+            new_file.write(downloaded_file)
+        bot.send_message(message.chat.id, "Мені потрібно трішки часу, зачекай будь ласка!")
+        audio_file = pdf_converter(file_path=full_path)
+        audio_path = f'{full_path}.mp3'
+        audio_file.save(audio_path)
+        time.sleep(5)
+        result = open(audio_path, 'rb')
+        bot.send_audio(message.chat.id, result)
+        result.close()
+        shutil.rmtree(file_path)
+    except AttributeError as e:
+        bot.send_message(message.chat.id, "Будь ласка, переконайся що ти ввів конкретні дані та спробуй ще раз")
+        logging.error(e)
+        default_menu(message)
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'converter')
+def command_converter(call):
+    sent = bot.send_message(call.message.chat.id, "🗺 Будь ласка, відправ мені файл у форматі PDF\n")
+    bot.register_next_step_handler(sent, file_handler)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'weather')
