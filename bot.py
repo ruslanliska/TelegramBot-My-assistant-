@@ -1,21 +1,20 @@
 import logging
 import os
-import tempfile
 import shutil
 
-import time
 import pyowm
 import telebot
+from art import tprint
 from pyowm import OWM
 from pyowm.commons.exceptions import NotFoundError
 from telebot import types
-from art import tprint
+
 from config import OWM_TOKEN, TOKEN
 from news import BotArticles
-from translate import ua_to_en, ua_to_de
-from weather import get_forecast
-from utils import Logger
 from pdf_to_mp3 import pdf_converter
+from translate import ua_to_en, ua_to_de
+from utils import Logger
+from weather import get_forecast
 
 bot = telebot.TeleBot(TOKEN)
 owm = OWM(OWM_TOKEN)
@@ -60,9 +59,11 @@ def ask_for_help(message):
         bot.send_message(message.chat.id, "Я радий, що зміг тобі допомогти")
     default_menu(message)
 
+
 @bot.message_handler(content_types=['audio', 'document'])
 def unknown(message):
     default_menu(message)
+
 
 def file_handler(message):
     try:
