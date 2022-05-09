@@ -21,5 +21,3 @@ def pdf_converter(file_path='test.pdf', language='en'):
     else:
         logging.error("File for convertion not found")
 
-
-pdf_converter(file_path='/home/ruslan/PycharmProjects/MyAssistantBot/sample.pdf')

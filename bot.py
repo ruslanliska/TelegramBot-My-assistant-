@@ -15,7 +15,7 @@ from news import BotArticles
 from translate import ua_to_en, ua_to_de
 from weather import get_forecast
 from utils import Logger
-
+from pdf_to_mp3 import pdf_converter
 bot = telebot.TeleBot(TOKEN)
 owm = OWM(OWM_TOKEN)
 
@@ -61,10 +61,12 @@ def file_handler(message):
     file_name = message.document.file_name
     file_path = f'tmp{os.getpid()}'
     os.mkdir(file_path)
+    full_path = f'{file_path}/{file_name}'
     file_info = bot.get_file(message.document.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
-    with open(f'{file_path}/{file_name}', 'wb') as new_file:
+    with open(full_path, 'wb') as new_file:
         new_file.write(downloaded_file)
+    pdf_converter(file_path=full_path)
     time.sleep(5)
     shutil.rmtree(file_path)
 
