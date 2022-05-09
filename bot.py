@@ -16,6 +16,7 @@ from translate import ua_to_en, ua_to_de
 from weather import get_forecast
 from utils import Logger
 from pdf_to_mp3 import pdf_converter
+
 bot = telebot.TeleBot(TOKEN)
 owm = OWM(OWM_TOKEN)
 
@@ -66,8 +67,14 @@ def file_handler(message):
     downloaded_file = bot.download_file(file_info.file_path)
     with open(full_path, 'wb') as new_file:
         new_file.write(downloaded_file)
-    pdf_converter(file_path=full_path)
+    bot.send_message(message.chat.id, "Мені потрібно трішки часу, зачекай будь ласка!")
+    audio_file = pdf_converter(file_path=full_path)
+    audio_path = f'{full_path}.mp3'
+    audio_file.save(audio_path)
     time.sleep(5)
+    result = open(audio_path, 'rb')
+    bot.send_audio(message.chat.id, result)
+    result.close()
     shutil.rmtree(file_path)
 
 

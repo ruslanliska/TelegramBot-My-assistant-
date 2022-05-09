@@ -16,8 +16,9 @@ def pdf_converter(file_path='test.pdf', language='en'):
 
         audio_result = gTTS(text=text, lang=language)
         file_name = Path(file_path).stem
-        audio_result.save(f'{file_name}.mp3')
+        # audio_result.save(f'{file_name}.mp3')
         logging.info("MP3 file converted")
+        return audio_result
     else:
         logging.error("File for convertion not found")
 
