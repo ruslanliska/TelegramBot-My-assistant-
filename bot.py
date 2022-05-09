@@ -5,7 +5,7 @@ import telebot
 from pyowm import OWM
 from pyowm.commons.exceptions import NotFoundError
 from telebot import types
-
+from art import tprint
 from config import OWM_TOKEN, TOKEN
 from news import BotArticles
 from translate import ua_to_en, ua_to_de
@@ -124,5 +124,6 @@ def main():
 
 
 if __name__ == "__main__":
+    tprint("My Assistant Bot", font='bulbhead')
     Logger()
     main()

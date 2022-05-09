@@ -36,3 +36,4 @@ def get_forecast(place):
                \nВологість: {hu}%"""
 
     return forecast
+
