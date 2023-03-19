@@ -1,6 +1,6 @@
 from pyowm import OWM
 import logging
-from config import OWM_TOKEN
+from utils import OWM_TOKEN
 
 owm = OWM(OWM_TOKEN)
 
@@ -12,6 +12,7 @@ def get_forecast(place):
     w = observation.weather
     # temperature
     t = w.temperature('celsius')
+    print(t)
     t1 = t['temp']
     t2 = t['feels_like']
     t3 = t['temp_max']
@@ -30,7 +31,7 @@ def get_forecast(place):
     pr = w.pressure['press']
 
     forecast = f"""У населеному пункті {place} температура {t1}°C, щоправда відчуваєтся як {t2}°C. 
-               \nПротягом доби, максимальна температура {t3}°C, мінімальна {t4}°C,
+               \nПротягом доби, максимальна температура {t3}°C,
                \nШвидкість вітру протягом дня: {wi} м/с.
                \nАтмосферний тиск: {pr} Па
                \nВологість: {hu}%"""

@@ -9,14 +9,14 @@ from pyowm import OWM
 from pyowm.commons.exceptions import NotFoundError
 from telebot import types
 
-from config import OWM_TOKEN, TOKEN
+from utils import OWM_TOKEN, TELEGRAM_BOT_TOKEN, OPEN_AI_KEY
 from news import BotArticles
 from pdf_to_mp3 import pdf_converter
 from translate import ua_to_en, ua_to_de
 from utils import Logger
 from weather import get_forecast
 
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
 owm = OWM(OWM_TOKEN)
 
 
